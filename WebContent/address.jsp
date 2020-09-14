@@ -4,10 +4,12 @@
 <input type="text" id="sample2_postcode" placeholder="우편번호">
 <input type="button" onclick="sample2_execDaumPostcode()" value="우편번호 찾기"><br>
 <input type="text" id="sample2_address" placeholder="주소"><br>
-
+<input type="text" id="lat" >
+<input type="text" id="lng">
 <!-- iOS에서는 position:fixed 버그가 있음, 적용하는 사이트에 맞게 position:absolute 등을 이용하여 top,left값 조정 필요 -->
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8db9dff95416858f6139281500bb3bd3&libraries=services"></script>
 <script>
     // 우편번호 찾기 화면을 넣을 element
     var element_layer = document.getElementById('layer');
@@ -62,7 +64,10 @@
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('sample2_postcode').value = data.zonecode;
                 document.getElementById("sample2_address").value = addr;
-                window.TestApp.setAddress(addr);
+                geocode(addr);
+             var latitude = document.getElementById("lat").value;
+             var longitude = document.getElementById("lng").value; 
+
                 // 커서를 상세주소 필드로 이동한다.
             closeDaumPostcode()
 
@@ -83,7 +88,34 @@
         
     }
 
+    //----------------------------------------------------------
+    function geocode(address){
+    var latitude = 0;
+    var longitude = 0;
+   var geocoder = new kakao.maps.services.Geocoder();
+   document.getElementById("lat").value = '1';
+   // ★ 주소로 좌표를 검색
+   geocoder.addressSearch(address, function(result, status) { 
+      document.getElementById("lat").value = '2';
+      // 정상적으로 검색이 완료됐으면
+      if (status === kakao.maps.services.Status.OK) { 
+         document.getElementById("lat").value = '3';
+         var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+         latitude = result[0].y;
+         longitude = result[0].x;
+         
+         document.getElementById("lat").value = result[0].y;
+         document.getElementById("lng").value = result[0].x; 
+            window.TestApp.setAddress(address, latitude, longitude);
+         // 결과값으로 받은 위치를 마커로 표시
+
+         var marker = new kakao.maps.Marker({ map: map, position: coords });
+      }
+   });
+
+}
     
+    //-------------------------------------------------------------
     
     // 브라우저의 크기 변경에 따라 레이어를 가운데로 이동시키고자 하실때에는
     // resize이벤트나, orientationchange이벤트를 이용하여 값이 변경될때마다 아래 함수를 실행 시켜 주시거나,
@@ -101,5 +133,9 @@
         element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
         element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
     }
+    
+    
+
 </script>
+
 <script>sample2_execDaumPostcode()</script>
