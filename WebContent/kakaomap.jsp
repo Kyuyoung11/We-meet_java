@@ -15,8 +15,8 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	8db9dff95416858f6139281500bb3bd3&libraries=services"></script>
 <script>
 
-var x = [37.582435, 37.510194, 37.558282] //나중에 db에서 사용자 좌표 가져오는걸로 바꾸기
-var y = [127.011239, 127.112316, 126.969452] 
+var x = [37.582435, 37.510194, 37.558282, 37.6484962] //나중에 db에서 사용자 좌표 가져오는걸로 바꾸기
+var y = [127.011239, 127.112316, 126.969452, 127.0076599] 
 var sumx = 0;
 var sumy = 0;
 var centerx, centery;

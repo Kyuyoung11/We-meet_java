@@ -27,6 +27,7 @@ public class scheduleAPPServer {
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	PreparedStatement pstmt2 = null;
+	PreparedStatement pstmt3 =null;
 	Statement stmt = null;
 
 	ResultSet rs = null;
@@ -34,6 +35,7 @@ public class scheduleAPPServer {
 	String sql = "";
 	String sql2 = "";
 	String sql3 = ""; // 추가
+	String sql4 ="";
 	String returns = "";
 	String returns2 = "";
 	String returns3 = "";
@@ -79,7 +81,16 @@ public class scheduleAPPServer {
 
               stmt.execute(sql3);
 
+              sb = new StringBuilder();
+              sql4 = sb.append("create table friends_").append(id).append("( id char(15) NOT NULL, ")
+                    .append("name char(10) NOT NULL, ").append("status int(1) NOT NULL,").append("foreign key(id) references user(id), ")
+                    .append("primary key(id));").toString();
+              pstmt3 = conn.prepareStatement(sql4);
+              
+              pstmt3.executeUpdate();
+              
               returns = "ok";
+
 
            }
         }
@@ -111,6 +122,12 @@ public class scheduleAPPServer {
               stmt.close();
            } catch (SQLException ex) {
            }
+        if (pstmt3 != null)
+            try {
+               pstmt3.close();
+            } catch (SQLException ex) {
+            }
+
      }
      return returns;
   }
